@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🍕Restaurant Management System</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('restaurants')">Restaurants</a></li>
+                <li><a href="#" onclick="showPage('cart')">Cart (<span id="cart-count">0</span>)</a></li>
+                <li><a href="#" onclick="showPage('profile')">Profile</a></li>
+                <li><a href="#" onclick="showPage('admin')">Admin</a></li>
+            </ul>
+            <div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <button class="profile-btn" onclick="showPage('profile')">
+                    <i class="fas fa-user"></i>
+                </button>
+                <button class="cart-btn" onclick="showPage('cart')">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Page -->
+        <div id="login" class="page active">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1 class="auth-title"><i class="fas fa-sign-in-alt"></i> Welcome Back</h1>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                    <p>Don't have an account? <span class="toggle-auth" onclick="toggleAuth()">Sign up</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Page -->
+        <div id="signup" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1 class="auth-title"><i class="fas fa-user-plus"></i> Create Account</h1>
+                    <form onsubmit="handleSignup(event)">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="signup-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="signup-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signup-password" required>
+                        </div>
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                    </form>
+                    <p>Already have an account? <span class="toggle-auth" onclick="toggleAuth()">Login</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="home" class="page">
+            <div class="hero">
+                <h1>Order Delicious Food</h1>
+                <p>Discover amazing food from local restaurants</p>
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Search for restaurants or dishes..." id="home-search" onkeyup="searchRestaurants()">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <h2 class="section-title">Categories</h2>
+            <div class="categories">
+                <div class="category-card" onclick="filterByCategory('all')">
+                    <div class="category-icon">🍽️</div>
+                    <h3>All</h3>
+                </div>
+                <div class="category-card" onclick="filterByCategory('veg')">
+                    <div class="category-icon">🥗</div>
+                    <h3>Vegetarian</h3>
+                </div>
+                <div class="category-card" onclick="filterByCategory('non-veg')">
+                    <div class="category-icon">🍗</div>
+                    <h3>Non-Veg</h3>
+                </div>
+                <div class="category-card" onclick="filterByCategory('fast-food')">
+                    <div class="category-icon">🍔</div>
+                    <h3>Fast Food</h3>
+                </div>
+                <div class="category-card" onclick="filterByCategory('dessert')">
+                    <div class="category-icon">🍰</div>
+                    <h3>Desserts</h3>
+                </div>
+            </div>
+
+            <h2 class="section-title">Popular Restaurants</h2>
+            <div class="restaurants-grid" id="home-restaurants">
+                <!-- Restaurants will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Restaurants Page -->
+        <div id="restaurants" class="page">
+            <h2 class="section-title">All Restaurants</h2>
+            <div class="restaurants-grid" id="restaurant-list">
+                <!-- Restaurant list -->
+            </div>
+        </div>
+
+        <!-- Food Menu Page -->
+        <div id="menu" class="page">
+            <h2 class="section-title" id="menu-title">Restaurant Menu</h2>
+            <div class="food-grid" id="menu-items">
+                <!-- Menu items -->
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart" class="page">
+            <h2 class="section-title">Your Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total" class="cart-total hidden">
+                <div>Total: ₹<span id="cart-total-price">0</span></div>
+                <button class="auth-btn" onclick="proceedToCheckout()" style="margin-top: 1rem; max-width: 300px; display: inline-block;">
+                    Proceed to Checkout
+                </button>
+            </div>
+            <button class="auth-btn" onclick="clearCart()" style="background: var(--danger); margin-top: 1rem;">
+                Clear Cart
+            </button>
+        </div>
+
+        <!-- Order Summary -->
+        <div id="order-summary" class="page">
+            <h2 class="section-title">Order Summary</h2>
+            <div id="order-details"></div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="auth-btn" onclick="processPayment()" style="max-width: 300px;">
+                    Pay Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page">
+            <h2 class="section-title">User Profile</h2>
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div style="background: var(--light-card); padding: 2rem; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                    <h3><i class="fas fa-user"></i> Account Details</h3>
+                    <p><strong>Name:</strong> <span id="profile-name">USER</span></p>
+                    <p><strong>Email:</strong> <span id="profile-email">USER@example.com</span></p>
+                    <p><strong>Location:</strong> karimnagar, Telangana</p>
+                </div>
+                <h3 style="margin-bottom: 1rem;">Order History</h3>
+                <div id="order-history" style="background: var(--light-card); padding: 2rem; border-radius: 20px; box-shadow: var(--shadow);">
+                    <p>No orders yet. Order something delicious! 🍕</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin" class="page">
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-value="124">124</div>
+                    <div>Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-value="₹45,230">₹45,230</div>
+                    <div>Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-value="89">89</div>
+                    <div>Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-value="4.8">4.8</div>
+                    <div>Avg Rating</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="margin-bottom: 1rem;">Add Food Item</h3>
+                    <form id="add-food-form">
+                        <input type="text" placeholder="Food Name" id="food-name" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 10px; border: 1px solid #ddd;">
+                        <input type="number" placeholder="Price" id="food-price" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 10px; border: 1px solid #ddd;">
+                        <button type="submit" class="auth-btn" style="width: 100%;">Add Item</button>
+                    </form>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 1rem;">Recent Orders</h3>
+                    <div id="admin-orders" style="background: var(--light-card); padding: 1.5rem; border-radius: 15px;">
+                        <p>Loading orders...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <i class="fas fa-comments"></i>
+    </button>
+    <div id="chatbot" class="chatbot">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i> FoodBot
+            <button onclick="toggleChatbot()" style="background: none; border: none; color: white; font-size: 1.2rem; float: right; cursor: pointer;">×</button>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+            <div class="message bot">Hi! I'm FoodBot. How can I help you find delicious food today? 🍕</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" placeholder="Type your message..." id="chat-input" onkeypress="handleChatInput(event)">
+            <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
